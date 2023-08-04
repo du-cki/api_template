@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "api-template"
+version = "0.1.0"
+description = ""
+authors = ["du-cki <qwuakers@gmail.com>"]
+readme = "README.md"
+packages = [{include = "api_template"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiohttp = "^3.8.5"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

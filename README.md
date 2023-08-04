@@ -10,7 +10,7 @@ This template is a "batteries included" starting point for building APIs with `a
 
 ## Directory Structure
 
-`.`
+`.`<br>
 `├──`[`routes/`](routes): Any file in this folder is automatically added to the router<br>
 `├──`[`utils/`](utils): Contains "global" utility files<br>
 `├──`[`app.py`](./app.py): The main entry point to the application<br>

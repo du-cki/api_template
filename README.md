@@ -11,10 +11,10 @@ This template is a "batteries included" starting point for building APIs with `a
 ## Directory Structure
 
 `.`
-`├──``routes/`: Any file in this folder is automatically added to the router
-`├──``utils/`: Contains "global" utility files
-`├──``app.py`: The main entry point to the application
-`└──``config.toml`: A configuration file for the web application
+`├──`[`routes/`](routes): Any file in this folder is automatically added to the router<br>
+`├──`[`utils/`](utils): Contains "global" utility files<br>
+`├──`[`app.py`](./app.py): The main entry point to the application<br>
+`└──`[`config.toml`](./config.toml): A configuration file for the web application<br>
 
 ## Getting Started
 
@@ -39,7 +39,3 @@ For deployment, please refer to the official aiohttp [deployment documentation](
 ## Contributing
 
 Contributions are welcome. Please feel free to open an issue or submit a pull request.
-
----
-
-**Note**: This project is still under development. If you encounter any problems, please report them in the issue tracker. Your feedback is greatly appreciated.

@@ -10,12 +10,14 @@ from .logger import logger
 if TYPE_CHECKING:
     from .types import Route, METHODS, HANDLER
 
+
 def construct_route(path: str) -> str:
-    raw_path = path.split(".")[1:] # removes the module name (i.e `routes`)
+    raw_path = path.split(".")[1:]  # removes the module name (i.e `routes`)
     if raw_path[-1:][0] == "index":
         return "/" + "/".join(raw_path[:-1])
 
     return "/" + "/".join(raw_path)
+
 
 class App(web.Application):
     def __init__(self, *args, **kwargs):
@@ -37,7 +39,9 @@ class App(web.Application):
             routes: Optional[list["Route"]] = vars(mod).get("__APP_ROUTES")
 
             if routes is None:
-                logger.warning(f"Tried to load {extension} but it didn't contain any `@route`s.")
+                logger.warning(
+                    f"Tried to load {extension} but it didn't contain any `@route`s."
+                )
                 return
 
             for route in routes:
@@ -54,17 +58,14 @@ class App(web.Application):
 def route(
     *,
     method: Optional["METHODS"] = "GET",
-    path: Optional[str] = None, # by default, it will be the file based routing, but this will override it if needed.
-    name: Optional[str] = None, # name of route, defaults to the path.
+    path: Optional[
+        str
+    ] = None,  # by default, it will be the file based routing, but this will override it if needed.
+    name: Optional[str] = None,  # name of route, defaults to the path.
 ):
     def wrapper(f: "HANDLER"):
         methods = f.__globals__.setdefault("__APP_ROUTES", [])
-        methods.append({
-            "path": path,
-            "method": method,
-            "name": name,
-            "handler": f
-        })
+        methods.append({"path": path, "method": method, "name": name, "handler": f})
 
         @functools.wraps(f)
         async def wrapped(*args):

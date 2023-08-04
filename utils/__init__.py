@@ -1,1 +1,1 @@
-from .logger import ColourFormatter
+from .logger import logger as logger

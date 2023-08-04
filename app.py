@@ -1,4 +1,3 @@
-import logging
 import tomllib
 
 from aiohttp import web
@@ -6,15 +5,8 @@ from aiohttp import web
 from importlib import import_module
 from pathlib import Path
 
-from utils import ColourFormatter
+from utils import logger
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-ch = logging.StreamHandler()
-ch.setFormatter(ColourFormatter())
-
-logger.addHandler(ch)
 
 with open("config.toml", "r") as f:
     config = tomllib.loads(f.read())

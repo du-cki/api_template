@@ -42,3 +42,12 @@ class ColourFormatter(Formatter):
             ),  # won't ever get applied but for linting sake.
         )
         return fmt.format(record)
+
+
+logger = logging.getLogger("app")
+logger.setLevel(logging.INFO)
+
+ch = logging.StreamHandler()
+ch.setFormatter(ColourFormatter())
+
+logger.addHandler(ch)

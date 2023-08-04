@@ -44,6 +44,7 @@ class ColourFormatter(Formatter):
         return fmt.format(record)
 
 
+
 logger = logging.getLogger("app")
 logger.setLevel(logging.INFO)
 

@@ -6,9 +6,15 @@ from aiohttp import web
 from importlib import import_module
 from pathlib import Path
 
-logging.basicConfig(format="%(levelname)s | %(asctime)s | %(filename)s: %(message)s")
-logger = logging.getLogger("__main__")
+from utils import ColourFormatter
+
+logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+ch = logging.StreamHandler()
+ch.setFormatter(ColourFormatter())
+
+logger.addHandler(ch)
 
 with open("config.toml", "r") as f:
     config = tomllib.loads(f.read())

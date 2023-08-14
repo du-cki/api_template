@@ -11,10 +11,10 @@ This template is a "batteries included" starting point for building APIs with `a
 ## Directory Structure
 
 `.`<br>
-`├──`[`routes/`](routes): Any file in this folder is automatically added to the router<br>
-`├──`[`utils/`](utils): Contains "global" utility files<br>
-`├──`[`app.py`](./app.py): The main entry point to the application<br>
-`└──`[`config.toml`](./config.toml): A configuration file for the web application<br>
+`├──`[`routes/`](routes): Any file in this folder is automatically added to the router.<br>
+`├──`[`utils/`](utils): Contains "global" utility files.<br>
+`├──`[`app.py`](./app.py): The main entry point to the application.<br>
+`└──`[`config.toml`](./config.toml): A configuration file for the web application.<br>
 
 ## Getting Started
 
@@ -22,19 +22,19 @@ This template is a "batteries included" starting point for building APIs with `a
    ```
    $ git clone https://github.com/du-cki/api_template.git
    ```
-2. Navigate to the project directory:
+2. [ ] Navigate to the project directory:
    ```
    $ cd api_template
    ```
 3. Install the project dependencies & run the project:
    ```
    $ poetry install
-   $ poetry run python app.py
+   $ poetry run adev runserver . 
    ```
 
 ## Deployment
 
-For deployment, please refer to the official aiohttp [deployment documentation](https://docs.aiohttp.org/en/stable/deployment.html).
+For installing the dependencies, you could run `poetry install --without dev` to install required deps. For deployment, please refer to the official aiohttp [deployment documentation](https://docs.aiohttp.org/en/stable/deployment.html).
 
 ## Contributing
 

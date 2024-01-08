@@ -22,14 +22,14 @@ This template is a "batteries included" starting point for building APIs with `a
    ```
    $ git clone https://github.com/du-cki/api_template.git
    ```
-2. [ ] Navigate to the project directory:
+2. Navigate to the project directory:
    ```
    $ cd api_template
    ```
 3. Install the project dependencies & run the project:
    ```
    $ poetry install
-   $ poetry run adev runserver . 
+   $ poetry run adev runserver .
    ```
 
 ## Deployment

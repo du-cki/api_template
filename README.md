@@ -4,11 +4,11 @@ This template is a "batteries included" starting point for building APIs with `a
 
 ## Features
 
-- **Flexible Async Web-Server**: Utilizes `aiohttp.web` for creating a flexible and efficient asynchronous web server.
-- **File-Based Routing**: Any file in the routes folder is automatically added to the router, simplifying the routing process.
+- **Flexible Async Web-Server**: Utilizes `aiohttp.web` for creating a flexible and lightweight async web server.
+- **File-Based Routing**: Any file in the `routes/` folder is automatically added to the router, simplifying the routing process.
 - **Logging Preset**: Comes with a pre-configured logging setup.
 
-## Directory Structure
+## Template Structure
 
 `.`<br>
 `├──`[`routes/`](routes): Any file in this folder is automatically added to the router.<br>
@@ -34,7 +34,7 @@ This template is a "batteries included" starting point for building APIs with `a
 
 ## Deployment
 
-For installing the dependencies, you could run `poetry install --without dev` to install required deps. For deployment, please refer to the official aiohttp [deployment documentation](https://docs.aiohttp.org/en/stable/deployment.html).
+To install the dependencies, run `poetry install --without dev` which installs the non development dependencies. For deployment, please refer to the official aiohttp [deployment documentation](https://docs.aiohttp.org/en/stable/deployment.html).
 
 ## Contributing
 

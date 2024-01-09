@@ -1,13 +1,12 @@
 from aiohttp.web import Request, Response
-
 from typing import Awaitable, Callable, Literal, Optional, TypedDict
 
-METHODS = Literal["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
-HANDLER = Callable[[Request], Awaitable[Response]]
+Methods = Literal["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"] | str
+Handler = Callable[[Request], Awaitable[Response]]
 
 
 class Route(TypedDict):
-    method: METHODS
-    handler: HANDLER
+    method: Methods
+    handler: Handler
     path: Optional[str]
     name: Optional[str]

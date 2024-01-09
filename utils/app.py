@@ -3,29 +3,32 @@ import functools
 from aiohttp import web
 from importlib import import_module
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from .logger import logger
 
 if TYPE_CHECKING:
-    from .types import Route, METHODS, HANDLER
-
-
-def construct_route(path: str) -> str:
-    raw_path = path.split(".")[1:]  # removes the module name (i.e `routes`)
-    if raw_path[-1:][0] == "index":
-        return "/" + "/".join(raw_path[:-1])
-
-    return "/" + "/".join(raw_path)
+    from typing import Optional, List, Dict, Any
+    from .types import Route, Methods, Handler
 
 
 class App(web.Application):
-    def __init__(self, *args, **kwargs):
+    config: "Optional[Dict[str, Any]]"
+
+    def __init__(self, config: "Dict[str, Any]", *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.config = config
         self.on_startup.append(self.on_ready)
 
-    async def on_ready(self, _app: web.Application):
-        logger.info("Hello, World!")
+    def __construct_route(self, path: str) -> str:
+        raw_path = path.split(".")[1:]  # removes the module name (`routes`)
+        if raw_path[-1:][0] == "index":
+            return "/" + "/".join(raw_path[:-1])
+
+        return "/" + "/".join(raw_path)
+
+    async def on_ready(self, _: web.Application):
+        ...
 
     def load_extension(self, extension: str, *, silent: bool = False):
         try:
@@ -36,7 +39,7 @@ class App(web.Application):
 
             logger.error(f"Extension {extension} not found.")
         else:
-            routes: Optional[list["Route"]] = vars(mod).get("__APP_ROUTES")
+            routes: "Optional[List['Route']]" = vars(mod).get("__APP_ROUTES")
 
             if routes is None:
                 logger.warning(
@@ -45,11 +48,11 @@ class App(web.Application):
                 return
 
             for route in routes:
-                path = route["path"] or construct_route(extension)
+                path = route["path"] or self.__construct_route(extension)
                 self.router.add_route(
                     route["method"],
                     path,
-                    route["handler"],
+                    route["handler"]
                 )
 
                 logger.info(f"Loaded {path}")
@@ -57,15 +60,27 @@ class App(web.Application):
 
 def route(
     *,
-    method: Optional["METHODS"] = "GET",
-    path: Optional[
-        str
-    ] = None,  # by default, it will be the file based routing, but this will override it if needed.
-    name: Optional[str] = None,  # name of route, defaults to the path.
+    method: "Optional['Methods']" = "GET",
+    path: "Optional[str]" = None,
 ):
-    def wrapper(f: "HANDLER"):
+    """
+    Defines a `route` on a file.
+
+    Parameters
+    -----------
+    method: Methods
+        The request method of the route, defaults to `GET`.
+
+    path: Optional[str]
+        The path of the route. If not passed, it would be inferred from the file path.
+    """
+    def wrapper(f: "Handler"):
         methods = f.__globals__.setdefault("__APP_ROUTES", [])
-        methods.append({"path": path, "method": method, "name": name, "handler": f})
+        methods.append({
+            "path": path,
+            "method": method,
+            "handler": f
+        })
 
         @functools.wraps(f)
         async def wrapped(*args):

@@ -1,4 +1,4 @@
-from .app import (
+from .core import (
     App as App,
     route as route
 )

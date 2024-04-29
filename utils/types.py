@@ -4,7 +4,7 @@ from typing import Awaitable, Callable, Literal, Any
 
 FuncT = Callable[..., Awaitable[Any]]
 
-Method = Literal["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"] | str
+Method = Literal["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
 Handler = Callable[[Request], Awaitable[Response]]
 
 GenericHandler = Callable[[Request], Awaitable[Any]]

@@ -1,80 +1,23 @@
 from __future__ import annotations
 
-from aiohttp import web
-from importlib import import_module
-
 from typing import TYPE_CHECKING
 
-from utils.types import GenericHandler
-
-from .logger import logger
+from .types import (
+    GenericHandler,
+    ErrorHandler,
+    ResponseT,
+    Handler,
+    Method,
+)
 
 if TYPE_CHECKING:
-    from typing import List, Dict, Any, Awaitable, Callable, Optional
-    from .types import Method, Handler
-
-
-class App(web.Application):
-    config: Optional[Dict[str, Any]]
-
-    def __init__(
-        self,
-        config: Dict[str, Any],
-        *args: Any,
-        **kwargs: Any,
-    ):
-        super().__init__(*args, **kwargs)
-        self.config = config
-        self.on_startup.append(self.on_ready)
-
-    def _construct_route(
-        self,
-        path: str,
-    ) -> str:
-        raw_path = path.split(".")[1:]  # removes the module name (`routes`)
-        if raw_path[-1:][0] == "index":
-            return "/" + "/".join(raw_path[:-1])
-
-        return "/" + "/".join(raw_path)
-
-    async def on_ready(
-        self,
-        _: web.Application,
-    ): ...
-
-    def load_extension(
-        self,
-        extension: str,
-        *,
-        silent: bool = False,
-    ):
-        try:
-            mod = import_module(extension)
-        except ModuleNotFoundError as err:
-            if not silent:
-                raise Exception(f"Extension {extension} not found.")
-
-            logger.error(f"Extension {extension} not found.", exc_info=err)
-        else:
-            routes: Optional[List[Route]] = vars(mod).get("__APP_ROUTES")
-
-            if routes is None:
-                logger.warning(
-                    f"Tried to load {extension} but it didn't contain any `@route`s."
-                )
-                return
-
-            for route in routes:
-                path = route.path or self._construct_route(extension)
-                self.router.add_route(route.method, path, route.invoke)
-
-                logger.debug(f"Loaded {path}")
+    from typing import Any, Optional
 
 
 class Route:
     _before_invoke: Optional[GenericHandler] = None
     _after_invoke: Optional[GenericHandler] = None
-    _on_error: Optional[Callable[[web.Request, Exception], Awaitable[Any]]] = None
+    _on_error: Optional[ErrorHandler] = None
 
     def __init__(
         self,
@@ -121,7 +64,7 @@ class Route:
 
     def on_error(
         self,
-        func: Callable[[web.Request, Exception], Awaitable[Any]],
+        func: ErrorHandler,
     ) -> Any:
         """
         A decorator that catches any errors raised by the route, used to handle the errors.
@@ -130,7 +73,7 @@ class Route:
 
         Parameters
         -----------
-        func: FuncT
+        func: ErrorHandler
             The function to register as error handler.
         """
         self._on_error = func
@@ -141,12 +84,12 @@ class Route:
         self,
         *args: Any,
         **kwargs: Any,
-    ) -> web.Response | web.StreamResponse:
+    ) -> ResponseT:
         try:
             if self._before_invoke:
                 before_resp = await self._before_invoke(*args, **kwargs)
 
-                if isinstance(before_resp, web.StreamResponse | web.Response):
+                if isinstance(before_resp, ResponseT):
                     return before_resp
 
             resp = await self.handler(*args, **kwargs)
@@ -154,7 +97,7 @@ class Route:
             if self._after_invoke:
                 after_resp = await self._after_invoke(*args, **kwargs)
 
-                if isinstance(after_resp, web.StreamResponse | web.Response):
+                if isinstance(after_resp, ResponseT):
                     return after_resp
 
             return resp
@@ -175,10 +118,10 @@ def route(
 
     Parameters
     -----------
-    method: Method
+    method: Method = "GET"
         The request method of the route, defaults to `GET`.
 
-    path: Optional[str]
+    path: Optional[str] = None
         The path of the route. If not passed, it would be inferred from the file path.
     """
 

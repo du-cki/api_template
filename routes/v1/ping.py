@@ -8,6 +8,13 @@ from core import (
 
 @route()
 async def ping(req: web.Request):
+    # You can define a route with the `@route` decorator, which
+    # Optionally takes in two parameters; `path` and `method`
+    # the path can be used to override the file-based-routing path
+    # while the method can be used to change the request route type.
+    # You can define more than one route in a file, but the path-name
+    # must be unique
+
     return web.json_response(
         {"message": req["response"]},
     )
@@ -36,10 +43,11 @@ async def before(req: web.Request):
 
     # You can assign values to `req`, before the request is even called
     req["response"] = "Ping"
-    logger.info(f"Called before {req.path}")
+    logger.info("Called before %s", req.path)
 
 
 @ping.after_invoke
 async def after(req: web.Request):
     # the `Route.after_invoke` hook is called after the route is called
-    logger.info(f"Called after {req.path}")
+
+    logger.info("Called after %s", req.path)
